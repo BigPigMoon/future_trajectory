@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model ActionsWithObject {
+  Id          Int           @id @default(autoincrement())
+  Title       String
+  SportObject SportObject[]
+}
+
+model Active {
+  Id                                          Int           @id @default(autoincrement())
+  Name                                        String?
+  SportObject_SportObject_ActiveIdToActive    SportObject[] @relation("SportObject_ActiveIdToActive")
+  SportObject_SportObject_InReesterIdToActive SportObject[] @relation("SportObject_InReesterIdToActive")
+}
+
+model FCP {
+  Id          Int           @id @default(autoincrement())
+  Title       String
+  SportObject SportObject[]
+}
+
+model Locality {
+  Id          Int           @id @default(autoincrement())
+  Title       String
+  TitleEng    String?
+  SportObject SportObject[]
+}
+
+model MO {
+  Id          Int           @id @default(autoincrement())
+  Title       String
+  SportObject SportObject[]
+}
+
+model ObjectSportType {
+  Id          Int         @id @default(autoincrement())
+  ObjectId    Int
+  SportTypeId Int
+  SportType   SportType   @relation(fields: [SportTypeId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  SportObject SportObject @relation(fields: [ObjectId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model RFSubject {
+  Id          Int           @id @default(autoincrement())
+  Title       String
+  SportObject SportObject[]
+}
+
+model Significance {
+  Id          Int           @id @default(autoincrement())
+  Title       String
+  SportObject SportObject[]
+}
+
+model SportComplexType {
+  Id          Int           @id @default(autoincrement())
+  Title       String
+  SportObject SportObject[]
+}
+
+model SportObject {
+  Id                                           Int                @id @default(autoincrement())
+  Name                                         String?
+  NameEng                                      String?
+  ActiveId                                     Int?
+  ShortDescription                             String?
+  Description                                  String?
+  ShortDescriptionEng                          String?
+  DescriptionEng                               String?
+  MOId                                         Int?
+  RFSubjectID                                  Int?
+  SignificanceId                               Int?
+  LocalityId                                   Int?
+  Address                                      String?
+  AddressEng                                   String?
+  OKTMO                                        String?
+  FCPId                                        Int?
+  ActionsWithObjectId                          Int?
+  StartDate                                    String?
+  EndDate                                      String?
+  TotalFunding                                 Int?
+  FinancingFromFederalBudget                   Int?
+  FundingFromFederalBudgetMastered             Int?
+  FinancingFromBudgetSubjectFederation         Int?
+  FinancingFromBudgetSubjectFederationMastered Int?
+  FinancingFromBudgetMunicipality              Int?
+  FinancingFromBudgetMunicipalityMastered      Int?
+  FundingFromExtrabudgetarySources             Int?
+  FinancingFromExtrabudgetarySourcesMastered   Int?
+  Curator                                      String?
+  CuratorAddress                               String?
+  CuratorPhone                                 String?
+  ObjectPhone                                  String?
+  WorkInMOFR                                   String?
+  WorkInSat                                    String?
+  WorkInSun                                    String?
+  Area                                         Int?
+  Email                                        String?
+  URL                                          String?
+  InReesterId                                  Int?
+  SportComplexTypeId                           Int?
+  WhatCompetitions                             String?
+  YaCoordX                                     Float?
+  YaCoordY                                     Float?
+  YaScale                                      Int?
+  YaCenterX                                    Float?
+  YaCenterY                                    Float?
+  MiniCoordX                                   Float?
+  MiniCoordY                                   Float?
+  GeneralPlan                                  Int?
+  AdditionalPlan                               Int?
+  Photo                                        Int?
+  PhotoURL                                     String?
+  Video                                        Int?
+  Panarams                                     Int?
+  WebStream                                    Int?
+  OthersMaterial                               Int?
+  ObjectSportType                              ObjectSportType[]
+  ActionsWithObject                            ActionsWithObject? @relation(fields: [ActionsWithObjectId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  Active_SportObject_ActiveIdToActive          Active?            @relation("SportObject_ActiveIdToActive", fields: [ActiveId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  Active_SportObject_InReesterIdToActive       Active?            @relation("SportObject_InReesterIdToActive", fields: [InReesterId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  FCP                                          FCP?               @relation(fields: [FCPId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  Locality                                     Locality?          @relation(fields: [LocalityId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  MO                                           MO?                @relation(fields: [MOId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  RFSubject                                    RFSubject?         @relation(fields: [RFSubjectID], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  Significance                                 Significance?      @relation(fields: [SignificanceId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  SportComplexType                             SportComplexType?  @relation(fields: [SportComplexTypeId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model SportType {
+  Id              Int               @id @default(autoincrement())
+  Title           String
+  ObjectSportType ObjectSportType[]
+}
