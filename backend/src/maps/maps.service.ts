@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Coordinate } from './types';
+import { OjbectInfo } from './types/objectInfo.type';
 
 @Injectable()
 export class MapsService {
@@ -17,7 +18,7 @@ export class MapsService {
     });
   }
 
-  async getInfo(id: number) {
+  async getInfo(id: number): Promise<OjbectInfo> {
     const ret = await this.prisma.sportObject.findFirst({
       where: { Id: id },
       select: {
@@ -31,14 +32,42 @@ export class MapsService {
         Address: true,
         AddressEng: true,
         ObjectPhone: true,
+        Email: true,
+        URL: true,
         WorkInMOFR: true,
         WorkInSat: true,
         WorkInSun: true,
-        Email: true,
-        URL: true,
+        Area: true,
+        SportComplexType: { select: { Title: true } },
       },
     });
 
-    return ret;
+    const sportType = await this.prisma.objectSportType.findMany({
+      where: { SportObject: { Id: id } },
+      select: { SportType: { select: { Title: true } } },
+    });
+
+    console.log(sportType);
+    console.log(ret);
+
+    return {
+      Name: ret.Name,
+      NameEng: ret.NameEng,
+      Active: ret.Active_SportObject_ActiveIdToActive.Name,
+      ShortDescription: ret.ShortDescription,
+      ShortDescriptionEng: ret.ShortDescriptionEng,
+      Description: ret.Description,
+      DescriptionEng: ret.DescriptionEng,
+      Address: ret.Address,
+      AddressEng: ret.AddressEng,
+      ObjectPhone: ret.ObjectPhone,
+      Email: ret.Email,
+      URL: ret.URL,
+      WorkInMOFR: ret.WorkInMOFR,
+      WorkInSat: ret.WorkInSat,
+      WorkInSun: ret.WorkInSun,
+      Area: ret.Area,
+      SportComplexType: ret.SportComplexType.Title,
+    };
   }
 }

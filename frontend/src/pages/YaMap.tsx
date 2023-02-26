@@ -3,6 +3,7 @@ import { Map, YMaps, Placemark } from "@pbe/react-yandex-maps";
 import { Portal } from "../components/Portal";
 import { BallonComponent } from "../components/BallonComponent";
 import axios, { AxiosResponse } from "axios";
+import { Loading } from "../components/Loading";
 
 interface MapData {
   Id: number;
@@ -71,9 +72,7 @@ export const YaMap = () => {
           ))}
         </Map>
       ) : (
-        <div className="grid h-screen place-items-center">
-          <progress className="progress w-56" />
-        </div>
+        <Loading />
       )}
       {activeBallon && (
         <Portal elementId={`driver-${activeBallon.id}`}>
