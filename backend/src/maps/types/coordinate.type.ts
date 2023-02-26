@@ -1,5 +1,6 @@
 export interface Coordinate {
   Id: number;
-  YaMapX: number;
-  YaMapY: number;
+  YaCoordX: number;
+  YaCoordY: number;
+  Name: string;
 }

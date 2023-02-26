@@ -7,23 +7,14 @@ export class MapsService {
   constructor(private prisma: PrismaService) {}
 
   async getAllObject(): Promise<Coordinate[]> {
-    const coordinate = await this.prisma.sportObject.findMany({
+    return await this.prisma.sportObject.findMany({
       select: {
         Id: true,
         YaCoordX: true,
         YaCoordY: true,
-        YaCenterX: true,
-        YaCenterY: true,
-        MiniCoordX: true,
-        MiniCoordY: true,
+        Name: true,
       },
     });
-
-    const ret: Coordinate[] = coordinate.map((value) => {
-      return { Id: value.Id, YaMapX: value.YaCoordX, YaMapY: value.YaCoordY };
-    });
-
-    return ret;
   }
 
   async getInfo(id: number) {

@@ -2,29 +2,37 @@ import { useEffect, useState } from "react";
 import { Map, YMaps, Placemark } from "@pbe/react-yandex-maps";
 import { Portal } from "../components/Portal";
 import { BallonComponent } from "../components/BallonComponent";
+import axios, { AxiosResponse } from "axios";
+
+interface MapData {
+  Id: number;
+  YaCoordX: number;
+  YaCoordY: number;
+  Name: string;
+}
 
 export const YaMap = () => {
-  const [data, setData] = useState<
-    {
-      Id: number;
-      YaMapX: number;
-      YaMapY: number;
-    }[]
-  >([]);
+  const [data, setData] = useState<MapData[] | null>(null);
   const [activePortal, setActivePortal] = useState(false);
-  const [activeBallonId, setActiveBallonId] = useState(0);
+  const [activeBallon, setActiveBallon] = useState<{
+    id: number;
+    name: string;
+  } | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/maps/all")
-      .then((value) => value.json())
-      .then((newData) => {
-        setData((data) => [...newData]);
-      });
+    async function fetchData() {
+      const response: AxiosResponse<MapData[]> = await axios.get(
+        "http://localhost:5000/maps/all"
+      );
+      setData(response.data);
+    }
+
+    fetchData();
   }, []);
 
   return (
     <YMaps>
-      {data.length !== 0 && (
+      {data ? (
         <Map
           style={{
             width: "auto",
@@ -41,30 +49,38 @@ export const YaMap = () => {
             "geoObject.addon.balloon",
           ]}
         >
-          {data.map(
-            (element: { Id: number; YaMapX: number; YaMapY: number }) => (
-              <Placemark
-                key={element.Id}
-                defaultGeometry={[element.YaMapY, element.YaMapX]}
-                properties={{
-                  // создаём пустой элемент с заданными размерами
-                  balloonContent: `<div id="driver-${element.Id}" class="driver-card"></div>`,
-                }}
-                onClick={() => {
-                  // ставим в очередь промисов, чтобы сработало после отрисовки балуна
-                  setTimeout(() => {
-                    setActivePortal(true);
-                    setActiveBallonId(element.Id);
-                  }, 0);
-                }}
-              />
-            )
-          )}
+          {data.map((element: MapData) => (
+            <Placemark
+              key={element.Id}
+              defaultGeometry={[element.YaCoordY, element.YaCoordX]}
+              properties={{
+                // создаём пустой элемент с заданными размерами
+                balloonContent: `<div id="driver-${element.Id}" class="driver-card"></div>`,
+              }}
+              onClick={() => {
+                // ставим в очередь промисов, чтобы сработало после отрисовки балуна
+                setTimeout(() => {
+                  setActivePortal(true);
+                  setActiveBallon({
+                    id: element.Id,
+                    name: element.Name,
+                  });
+                }, 0);
+              }}
+            />
+          ))}
         </Map>
+      ) : (
+        <div className="grid h-screen place-items-center">
+          <progress className="progress w-56" />
+        </div>
       )}
-      {activePortal && (
-        <Portal elementId={`driver-${activeBallonId}`}>
-          <BallonComponent ballonId={activeBallonId} />
+      {activeBallon && (
+        <Portal elementId={`driver-${activeBallon.id}`}>
+          <BallonComponent
+            ballonId={activeBallon.id}
+            name={activeBallon.name}
+          />
         </Portal>
       )}
     </YMaps>

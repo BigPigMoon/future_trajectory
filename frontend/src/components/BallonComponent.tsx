@@ -3,27 +3,16 @@ import { useNavigate } from "react-router-dom";
 
 type BallonComponentProps = {
   ballonId: number;
+  name: string;
 };
 
 export const BallonComponent = (props: BallonComponentProps) => {
-  const [data, setData] = useState<{ Name: string }>({
-    Name: "",
-  });
-
-  useEffect(() => {
-    fetch(`http://localhost:5000/maps/${props.ballonId}`)
-      .then((value) => value.json())
-      .then((newData) => {
-        setData(newData);
-      });
-  }, [props.ballonId]);
-
   const navigate = useNavigate();
 
   return (
     <>
       <div className="card-body items-center text-center">
-        <h2 className="card-title">{data.Name}</h2>
+        <h2 className="card-title">{props.name}</h2>
         <div className="card-actions">
           <button
             className="btn btn-primary"
