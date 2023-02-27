@@ -14,7 +14,7 @@ export const Navbar = () => {
             <Link to="/">Карты</Link>
           </li>
           <li>
-            <Link to="/graph">Графики</Link>
+            <Link to="/charts">Графики</Link>
           </li>
         </ul>
       </div>
