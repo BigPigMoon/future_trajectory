@@ -3,6 +3,7 @@ import "chart.js/auto";
 import { Chart } from "react-chartjs-2";
 import axios, { AxiosResponse } from "axios";
 import { Loading } from "../components/Loading";
+import { baseUrl } from "../config";
 
 interface Dataset {
   label: string;
@@ -23,7 +24,7 @@ export const Charts = () => {
   useEffect(() => {
     async function fetchData() {
       const response: AxiosResponse<ChartDataset> = await axios.get(
-        `http://localhost:5000/charts/${select}`
+        `${baseUrl}/charts/${select}`
       );
       setPreData(response.data);
     }

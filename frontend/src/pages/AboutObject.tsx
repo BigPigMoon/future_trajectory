@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios, { AxiosResponse } from "axios";
+import { baseUrl } from "../config";
 import { Loading } from "../components/Loading";
 
 interface ObjectData {
@@ -32,7 +33,7 @@ export const AboutObject = () => {
   useEffect(() => {
     async function fetchData() {
       const response: AxiosResponse<ObjectData | null> = await axios.get(
-        `http://localhost:5000/maps/${id}`
+        `${baseUrl}/maps/${id}`
       );
       setData(response.data);
     }

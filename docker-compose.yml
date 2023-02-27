@@ -1,16 +1,24 @@
 version: '3' 
 services:
-  db:
-    image: 'postgres:latest'
+  backend-ft:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    container_name: backend-ft
     restart: always
     ports:
-      - 5432:5432
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: ft_db
-    volumes:
-      - psqldata:/var/lib/postgresql
-volumes:
-  psqldata:
-  pgadmin-data:
+      - 3000:3000
+    env_file:
+      - backend/.env
+  frontend-ft:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    container_name: frontend-ft
+    restart: always
+    depends_on:
+      - backend-ft
+    ports:
+      - 80:80
+    env_file:
+      - frontend/.env

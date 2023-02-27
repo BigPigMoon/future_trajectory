@@ -4,6 +4,7 @@ import { Portal } from "../components/Portal";
 import { BallonComponent } from "../components/BallonComponent";
 import axios, { AxiosResponse } from "axios";
 import { Loading } from "../components/Loading";
+import { baseUrl } from "../config";
 
 interface MapData {
   Id: number;
@@ -14,7 +15,6 @@ interface MapData {
 
 export const YaMap = () => {
   const [data, setData] = useState<MapData[] | null>(null);
-  const [activePortal, setActivePortal] = useState(false);
   const [activeBallon, setActiveBallon] = useState<{
     id: number;
     name: string;
@@ -23,7 +23,7 @@ export const YaMap = () => {
   useEffect(() => {
     async function fetchData() {
       const response: AxiosResponse<MapData[]> = await axios.get(
-        "http://localhost:5000/maps/all"
+        `${baseUrl}/maps/all`
       );
       setData(response.data);
     }
@@ -61,7 +61,6 @@ export const YaMap = () => {
               onClick={() => {
                 // ставим в очередь промисов, чтобы сработало после отрисовки балуна
                 setTimeout(() => {
-                  setActivePortal(true);
                   setActiveBallon({
                     id: element.Id,
                     name: element.Name,
