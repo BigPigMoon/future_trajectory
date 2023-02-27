@@ -42,14 +42,6 @@ export class MapsService {
       },
     });
 
-    const sportType = await this.prisma.objectSportType.findMany({
-      where: { SportObject: { Id: id } },
-      select: { SportType: { select: { Title: true } } },
-    });
-
-    console.log(sportType);
-    console.log(ret);
-
     return {
       Name: ret.Name,
       NameEng: ret.NameEng,

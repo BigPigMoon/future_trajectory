@@ -15,14 +15,9 @@ export class ChartsController {
     return this.chartsService.getActionsData();
   }
 
-  @Get('/started')
+  @Get('/date')
   getStartedAtData() {
-    return this.chartsService.getStartedAtData();
-  }
-
-  @Get('/ended')
-  getEndedAtData() {
-    return this.chartsService.getEndedAtData();
+    return this.chartsService.getDateData();
   }
 
   @Get('/inreester')

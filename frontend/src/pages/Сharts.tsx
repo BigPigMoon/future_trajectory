@@ -18,6 +18,7 @@ interface ChartDataset {
 export const Charts = () => {
   const [preData, setPreData] = useState<ChartDataset | null>(null);
   const [select, setSelect] = useState("");
+  const [selectedText, setSelectedText] = useState("");
 
   useEffect(() => {
     async function fetchData() {
@@ -30,39 +31,53 @@ export const Charts = () => {
     fetchData();
   }, [select]);
 
-  const data = {
-    labels: preData?.labels,
-    datasets: [
-      {
-        label: preData?.datasets[0].label,
-        data: preData?.datasets[0].data,
-      },
-    ],
-  };
+  let data;
+  if (preData) {
+    data = {
+      labels: preData.labels,
+      datasets: preData.datasets.map((val) => {
+        return {
+          label: val.label,
+          data: val.data,
+        };
+      }),
+    };
+  }
 
   return (
     <div>
       <div>
         <select
-          className="select select-bordered w-full max-w-xs m-7"
+          className="select select-bordered w-full max-w-xl m-7"
           onChange={(event) => {
+            setSelectedText(event.target.value);
             if (event.target.value === "Количество комплексов в субъектах РФ")
               setSelect("rfsubject");
 
-            if (event.target.value === "Количество объектов с действиями")
+            if (
+              event.target.value === "Количество объектов по действиям над ними"
+            )
               setSelect("actions");
 
             if (event.target.value === "Количество объектов в реесте")
               setSelect("inreester");
 
-            if (event.target.value === "Количество объектов с видом спорта")
+            if (
+              event.target.value ===
+              "Количество объектов по доступным видам спорта"
+            )
               setSelect("sporttype");
 
             if (
               event.target.value ===
-              "Количество объектов с поддержкой типов спорта"
+              "Количество объектов по доступным типам спортивного комплекса"
             )
               setSelect("sportcomplex");
+            if (
+              event.target.value ===
+              "Количество объектов по дате начала и окончания работ"
+            )
+              setSelect("date");
           }}
           value={"Выбирете данные для графика"}
         >
@@ -70,17 +85,25 @@ export const Charts = () => {
             Выбирете данные для графика
           </option>
           <option>Количество комплексов в субъектах РФ</option>
-          <option>Количество объектов с действиями</option>
+          <option>Количество объектов по действиям над ними</option>
           <option>Количество объектов в реесте</option>
-          <option>Количество объектов с видом спорта</option>
-          <option>Количество объектов с поддержкой типов спорта</option>
+          <option>Количество объектов по дате начала и окончания работ</option>
+          <option>Количество объектов по доступным видам спорта</option>
+          <option>
+            Количество объектов по доступным типам спортивного комплекса
+          </option>
         </select>
       </div>
-      {preData ? (
-        <div className="flex items-center justify-center p-10">
+      {data ? (
+        <div className="flex flex-col items-center justify-center p-10">
+          <h1 className="text-4xl font-bold align-middle w-max py-6">
+            {selectedText}
+          </h1>
           {preData?.type === "bar" && <Chart type="bar" data={data} />}
           {preData?.type === "doughnut" && (
-            <Chart type="doughnut" data={data} />
+            <div className="w-5/12 h-5/12">
+              <Chart type="doughnut" data={data} />
+            </div>
           )}
         </div>
       ) : (

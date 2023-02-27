@@ -5,6 +5,6 @@ interface Dataset {
 
 export interface ChartData {
   type: string;
-  labels: string[];
+  labels: string[] | number[];
   datasets: Dataset[];
 }
