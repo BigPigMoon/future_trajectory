@@ -55,11 +55,9 @@ export const YaMap = () => {
               key={element.Id}
               defaultGeometry={[element.YaCoordY, element.YaCoordX]}
               properties={{
-                // создаём пустой элемент с заданными размерами
                 balloonContent: `<div id="driver-${element.Id}" class="driver-card"></div>`,
               }}
               onClick={() => {
-                // ставим в очередь промисов, чтобы сработало после отрисовки балуна
                 setTimeout(() => {
                   setActiveBallon({
                     id: element.Id,
